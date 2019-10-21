@@ -37,7 +37,6 @@ class Game {
     changeScene(name) {
         this.activeScene = new this.allScene[name](this);
 
-        this.app.stage
         this.app.stage.addChild(this.activeScene.viewport);
 
         this.activeScene.start();
