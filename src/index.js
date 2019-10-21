@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
+import { Subject } from 'rxjs';
 
-import Player from './objects/Player';
 import Input from './core/Input';
 import Physics from './core/Physics';
 import Scene from './scene/index'
@@ -13,19 +13,12 @@ class Game {
         this.physics = new Physics();
         this.allScene = Scene;
         this.assets = {};
+        this.subject = new Subject();
 
         this.start();
     }
 
     start() {
-        // init
-        this.init();
-
-        // init update
-        this.update();
-    }
-
-    init() {
         this.app = new PIXI.Application({
             width: window.innerWidth,
             height: window.innerHeight
@@ -34,16 +27,18 @@ class Game {
         // init scene
         this.changeScene('boot');
 
-        this.stage = this.app.stage;
-
         // append to html element
         document.getElementById('root').append(this.app.view);
+
+        // init update
+        this.update();
     }
 
     changeScene(name) {
         this.activeScene = new this.allScene[name](this);
 
-        this.app.stage = this.activeScene.stage;
+        this.app.stage
+        this.app.stage.addChild(this.activeScene.viewport);
 
         this.activeScene.start();
     }
@@ -61,4 +56,4 @@ class Game {
     }
 }
 
-const app = new Game();
+const app = window.app = new Game();

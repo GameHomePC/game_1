@@ -16,44 +16,37 @@ export default class Player extends Model {
 
         this.inputReader = new InputReader(this);
         this.commandProcessor = new CommandProcessor();
-
         this.animation = new Ninja(this);
-
-        this.speed = 2;
+        this.speed = 15;
+        this.nearDoor = false;
+        this.activeDoor = null;
 
         this.start();
+        this.subscribe();
     }
 
-    checkObservable = () => {
-        this.game.activeScene.door.observable.subscribe(object => {
-            const { action, data } = object;
+    subscribe() {
+        this.subject.subscribe(data => {
+            const { action, target } = data;
 
-            if (action === 'open') {
-                data.handleChangeLight();
+            if (action === 'collisionStartDoor') {
+                target.handleOpenDoor(this);
             }
 
-            if (action === 'close') {
-                data.handleChangeLight();
-            }
-
-            if (action === 'active') {
-                data.handleOpenDoor(this.inputReader);
-            }
-
-            if (action === 'not-active') {
-                data.handleOpenDoor(this.inputReader);
+            if (action === 'collisionEndDoor') {
+                target.handleLockedOrUnlockedDoor(this);
             }
 
             console.log(action);
         });
-    };
+    }
 
     start() {
         const { Bodies, World, world } = this.physics;
         const { width, height } = this.params;
 
         this.visual = this.animation.useAnimation('Idle', 0.3);
-
+        this.visual.zIndex = 1;
         this.visual.position.set(
             this.position.x,
             this.position.y
@@ -63,8 +56,8 @@ export default class Player extends Model {
         this.visual.height = height;
         this.visual.anchor.set(0.5);
 
-        this.game.app.stage.addChild(this.visual);
-        this.game.objects.set(this, this);
+        this.stage.addChild(this.visual);
+        this.objects.set(this, this);
         this.body = Bodies.rectangle(
             this.position.x,
             this.position.y,
@@ -74,6 +67,7 @@ export default class Player extends Model {
                 isStatic: false
             }
         );
+        this.body.model = this;
 
         World.add(world, [this.body])
     }
@@ -83,6 +77,7 @@ export default class Player extends Model {
         const checkDownKey = this.inputReader.checkDownKey();
         const trySpeed = this.inputReader.readSpeed();
         const tryJump = this.inputReader.readJump();
+        const goInTheDoor = this.inputReader.goInTheDoor();
 
         if (direction) {
             this.commandProcessor.executeCommand(
@@ -99,7 +94,11 @@ export default class Player extends Model {
         );
 
         if (checkDownKey) {
-            this.animation.setAnimation('Idle');
+            this.animation.setAnimation('Idle', null, this.visual);
+        }
+
+        if (this.nearDoor && goInTheDoor) {
+            this.activeDoor.goToNextDoor(this);
         }
 
         this.visual.rotation = this.body.angle;

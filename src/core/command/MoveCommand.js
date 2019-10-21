@@ -6,6 +6,7 @@ export default class MoveCommand extends Command {
 
         this._direction = direction;
         this.input = entity.game.input;
+        this.visual = entity.visual;
     }
 
     execute() {
@@ -15,28 +16,23 @@ export default class MoveCommand extends Command {
             physics: {
                 Body
             },
-            animation,
-            checkObservable
+            animation
         } = this._entity;
         const { hasDown } = this.input;
 
         if (this._direction === 'left') {
             Body.translate(body, { x: -(speed * this._dt), y: 0});
 
-            checkObservable();
-
             if (!hasDown('space')) {
-                animation.setAnimation('Run', 'left');
+                animation.setAnimation('Run', 'left', this.visual);
             }
         }
 
         if (this._direction === 'right') {
             Body.translate(body, { x: speed * this._dt, y: 0});
 
-            checkObservable();
-
             if (!hasDown('space')) {
-                animation.setAnimation('Run', 'right');
+                animation.setAnimation('Run', 'right', this.visual);
             }
         }
     }

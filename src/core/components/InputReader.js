@@ -46,4 +46,10 @@ export default class InputReader {
 
         return false;
     }
+
+    goInTheDoor() {
+        const { hasDown } = this.input;
+
+        return hasDown('e');
+    }
 }

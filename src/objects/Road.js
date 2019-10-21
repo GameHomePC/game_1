@@ -14,18 +14,22 @@ export default class Road extends Model {
         const { width, height } = this.params;
 
         this.visual = new PIXI.Graphics();
+        this.visual.beginFill(0xDE3249);
+        this.visual.drawRect(
+            0,
+            0,
+            width,
+            height
+        );
+        this.visual.endFill();
+
         this.visual.position.set(
             this.position.x,
             this.position.y
         );
 
-        this.visual.pivot.set(
-            width / 2,
-            height / 2
-        );
-
-        this.game.app.stage.addChild(this.visual);
-        this.game.objects.set(this, this);
+        this.stage.addChild(this.visual);
+        this.objects.set(this, this);
 
         this.body = Bodies.rectangle(
             this.position.x + width / 2,

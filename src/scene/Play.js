@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js';
+import { Viewport } from 'pixi-viewport';
 import Player from "../objects/Player";
 import Door from "../objects/Door";
 import Road from "../objects/Road";
@@ -8,9 +9,10 @@ export default class Play {
         this.game = game;
         this.app = this.game.app;
         this.physics = this.game.app.physics;
-        this.stage = new PIXI.Container();
+        this.viewport = new Viewport();
+        this.viewport.sortableChildren = true;
 
-        this.stage.nameScene = 'Play';
+        this.viewport.nameScene = 'Play';
     }
 
     start() {
@@ -26,16 +28,30 @@ export default class Play {
             height: 37 * 2
         });
 
-        this.door = new Door({
+        this.door1 = new Door({
             game: this.game,
             position: {
                 x: 500,
-                y: 850
+                y: 820
             },
             width: 280 / 2,
-            height: 464 / 2,
-            enablePhysics: false
+            height: 464 / 2
         });
+        this.door1.name = 'door 1';
+
+        this.door2 = new Door({
+            game: this.game,
+            position: {
+                x: 500,
+                y: 185
+            },
+            width: 280 / 2,
+            height: 464 / 2
+        });
+        this.door2.name = 'door 2';
+
+        this.door1.setToTarget(this.door2);
+        this.door2.setToTarget(this.door1);
     }
 
     createBG = () => {
@@ -57,13 +73,23 @@ export default class Play {
         // init bg
         // this.createBG();
 
-        this.road = new Road({
+        new Road({
             game: this.game,
             position: {
                 x: 0,
                 y: window.innerHeight - 50
             },
             width: window.innerWidth,
+            height: 50
+        });
+
+        new Road({
+            game: this.game,
+            position: {
+                x: 300,
+                y: 300
+            },
+            width: 600,
             height: 50
         });
     };

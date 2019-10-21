@@ -1,14 +1,15 @@
 import * as PIXI from 'pixi.js';
+import { Viewport } from 'pixi-viewport';
 
 export default class Boot {
     constructor(game) {
         this.game = game;
         this.app = game.app;
-        this.stage = new PIXI.Container();
+        this.viewport = new Viewport();
         this.elementProgressParent = document.querySelector('.loading');
         this.elementProgress = document.querySelector('.loading__progress');
 
-        this.stage.nameScene = 'Boot';
+        this.viewport.nameScene = 'Boot';
     }
 
     start() {

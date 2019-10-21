@@ -16,7 +16,6 @@ import * as PIXI from 'pixi.js';
 export default class Ninja {
     constructor(object) {
         this.game = object.game;
-        this.visual = object.visual;
     }
 
     useAnimation = (name, speed = 0.5) => {
@@ -24,12 +23,12 @@ export default class Ninja {
 
         const textures = this.getTextures(name);
 
-        this.visual = new PIXI.AnimatedSprite(textures);
-        this.visual.name = name;
-        this.visual.animationSpeed = speed;
-        this.visual.play();
+        let visual = new PIXI.AnimatedSprite(textures);
+        visual.name = name;
+        visual.animationSpeed = speed;
+        visual.play();
 
-        return this.visual;
+        return visual;
     };
 
     getTextures = (name) => {
@@ -48,24 +47,24 @@ export default class Ninja {
         })[1];
     };
 
-    setAnimation = (name, direction) => {
+    setAnimation = (name, direction, visual) => {
         if (direction === 'left') {
-            this.visual.scale.x = -Math.abs(this.visual.scale.x);
+            visual.scale.x = -Math.abs(visual.scale.x);
         }
 
         if (direction === 'right') {
-            this.visual.scale.x = Math.abs(this.visual.scale.x);
+            visual.scale.x = Math.abs(visual.scale.x);
         }
 
-        if (this.hasAnimation(name)) return;
+        if (this.hasAnimation(name, visual)) return;
 
-        this.visual.textures = this.getTextures(name);
-        this.visual.name = name;
-        this.visual.updateTexture();
-        this.visual.play();
+        visual.textures = this.getTextures(name);
+        visual.name = name;
+        visual.updateTexture();
+        visual.play();
     };
 
-    hasAnimation(name) {
-        return this.visual && this.visual.name === name;
+    hasAnimation(name, visual) {
+        return visual && visual.name === name;
     }
 }

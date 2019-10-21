@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 
-export default class Model extends PIXI.Container {
+export default class Model extends PIXI.DisplayObject {
     constructor(object) {
         super();
 
@@ -13,6 +13,12 @@ export default class Model extends PIXI.Container {
         } = object;
 
         this.game = game;
+        this.app = game.app;
+        this.scene = game.activeScene;
+        this.stage = game.activeScene.viewport;
+        this.objects = game.objects;
+        this.subject = game.subject;
+        this.assets = game.assets;
         this.physics = this.game.physics;
         this.params = {
             width: width || 0,
@@ -26,8 +32,8 @@ export default class Model extends PIXI.Container {
     }
 
     destroy() {
-        this.game.app.stage.removeChild(this.bunny);
-        this.game.objects.delete(this);
+        this.app.stage.removeChild(this.visual);
+        this.objects.delete(this);
     }
 
     start() {}

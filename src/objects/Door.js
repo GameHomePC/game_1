@@ -1,103 +1,85 @@
 import * as PIXI from 'pixi.js';
 import Model from './Model';
-import { Observable } from 'rxjs';
-import Vector2 from './../utils/Vector2';
 
 export default class Door extends Model {
     constructor(object) {
         super(object);
 
-        this.state = {
-            open: false,
-            active: false
-        };
-
-        this.observable = new Observable(observer => {
-            const {
-                visual,
-                game,
-                width
-            } = this;
-            const player = game.activeScene.player;
-            const doorPosition = new Vector2(
-                visual.position.x - width / 2,
-                visual.position.y
-            );
-            const playerPosition = new Vector2(
-                player.visual.position.x - player.width / 2,
-                player.visual.position.y - player.height / 2
-            );
-            const distance = doorPosition.distanceTo(playerPosition);
-
-            if (distance <= 100) {
-                if (!this.state.active) {
-                    this.setState('active', true);
-                    return observer.next({
-                        action: 'active',
-                        data: this
-                    });
-                }
-            } else {
-                if (this.state.active) {
-                    this.setState('active', false);
-                    return observer.next({
-                        action: 'not-active',
-                        data: this
-                    });
-                }
-            }
-
-            if (distance <= 200) {
-                if (!this.state.open) {
-                    this.setState('open', true);
-                    observer.next({
-                        action: 'open',
-                        data: this
-                    });
-                }
-            } else {
-                if (this.state.open) {
-                    this.setState('open', false);
-                    observer.next({
-                        action: 'close',
-                        data: this
-                    });
-                }
-            }
-        });
+        this.toTarget = null;
 
         this.start();
+        this.observer();
     }
 
-    handleChangeLight = () => {
-        const {
-            assets: {
-                door_locked,
-                door_unlocked
-            }
-        } = this.game;
+    observer() {
+        const { engine, Events } = this.physics;
 
-        if (this.state.open) {
-            this.visual.texture = new PIXI.Texture(door_unlocked.texture);
-        } else {
-            this.visual.texture = new PIXI.Texture(door_locked.texture);
-        }
+        Events.on(engine, 'collisionStart', event => {
+            const { pairs } = event;
+
+            pairs.forEach(pair => {
+                const { bodyA, bodyB } = pair;
+
+                if ([bodyA, bodyB].includes(this.body)) {
+                    this.subject.next({
+                        action: 'collisionStartDoor',
+                        target: this
+                    });
+                }
+            });
+        });
+
+        Events.on(engine, 'collisionEnd', event => {
+            const pairs = event.pairs;
+
+            pairs.forEach(pair => {
+                const { bodyA, bodyB } = pair;
+
+                if ([bodyA, bodyB].includes(this.body)) {
+                    this.subject.next({
+                        action: 'collisionEndDoor',
+                        target: this
+                    });
+                }
+            });
+        });
+    }
+
+    handleOpenDoor = player => {
+        const { door_open } = this.assets;
+
+        this.changeTexture(door_open);
+        player.nearDoor = true;
+        player.activeDoor = this;
     };
 
-    handleOpenDoor = () => {
-        const {
-            assets: {
-                door_unlocked,
-                door_open
-            }
-        } = this.game;
+    handleLockedOrUnlockedDoor = player => {
+        const { door_locked } = this.assets;
 
-        if (this.state.active) {
-            this.visual.texture = new PIXI.Texture(door_open.texture);
-        } else {
-            this.visual.texture = new PIXI.Texture(door_unlocked.texture);
-        }
+        this.changeTexture(door_locked);
+        player.nearDoor = false;
+        player.activeDoor = null;
     };
+
+    changeTexture(resurse) {
+        this.visual.texture = new PIXI.Texture(resurse.texture);
+    }
+
+    goToNextDoor(player) {
+        const { Body } = this.physics;
+        const { x, y } = this.toTarget.position;
+
+        Body.setPosition(player.body, { x: x, y: y + 80 });
+
+        console.log(this.name);
+
+        player.activeDoor = this;
+        player.nearDoor = true;
+    }
+
+    setToTarget(object) {
+        this.toTarget = object;
+    }
 
     start() {
         const { Bodies, World, world } = this.physics;
@@ -109,7 +91,7 @@ export default class Door extends Model {
         } = this.game;
 
         this.visual = new PIXI.Sprite(door_locked.texture);
-
+        this.visual.zIndex = 0;
         this.visual.position.set(
             this.position.x,
             this.position.y
@@ -119,8 +101,8 @@ export default class Door extends Model {
         this.visual.height = height;
         this.visual.anchor.set(0.5);
 
-        this.game.app.stage.addChild(this.visual);
-        this.game.objects.set(this, this);
+        this.stage.addChild(this.visual);
+        this.objects.set(this, this);
 
         if (enablePhysics) {
             this.body = Bodies.rectangle(
@@ -129,9 +111,11 @@ export default class Door extends Model {
                 width,
                 height,
                 {
-                    isStatic: true
+                    isStatic: true,
+                    isSensor: true
                 }
             );
+            this.body.model = this;
 
             World.add(world, [this.body])
         }

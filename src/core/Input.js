@@ -11,8 +11,6 @@ export default class Input {
         window.addEventListener('keydown', e => {
             const key = keycode(e);
 
-            console.log(key);
-
             this.keys.set(key, true);
         });
 
