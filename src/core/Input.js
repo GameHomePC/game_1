@@ -1,43 +1,91 @@
 import keycode from 'keycode';
 
 export default class Input {
-    constructor() {
-        this.keys = new Map();
+  constructor() {
+    this.keys = new Map();
 
-        this.start();
-    }
+    this.start();
+  }
 
-    start = () => {
-        window.addEventListener('keydown', e => {
-            const key = keycode(e);
+  start = () => {
+    window.addEventListener('keydown', e => {
+      const key = keycode(e);
 
-            this.keys.set(key, true);
-        });
+      console.log(key);
 
-        window.addEventListener('keyup', e => {
-            const key = keycode(e);
+      this.keys.set(key, true);
+    });
 
-            this.keys.set(key, false);
-        });
+    window.addEventListener('keyup', e => {
+      const key = keycode(e);
+
+      this.keys.set(key, false);
+    });
+
+    const funGamePad = (e) => {
+      console.log(
+        "Gamepad connected at index %d: %s. %d buttons, %d axes.",
+        e.gamepad.index, e.gamepad.id,
+        e.gamepad.buttons.length, e.gamepad.axes.length
+      );
     };
 
-    hasDown = key => {
-        const lowerCaseKey = key.toLowerCase();
+    window.addEventListener("gamepadconnected", funGamePad, false);
+    window.addEventListener("gamepaddisconnected", funGamePad, false);
+  };
 
-        const value = this.keys.get(lowerCaseKey);
+  hasDown = key => {
+    const lowerCaseKey = key.toLowerCase();
 
-        return Boolean(value);
-    };
+    const value = this.keys.get(lowerCaseKey);
 
-    get hasDownGlobal() {
-        let status = false;
+    return Boolean(value);
+  };
 
-        this.keys.forEach(item => {
-            if (item) {
-                status = true;
-            }
-        });
+  get hasDownGlobal() {
+    let status = false;
 
-        return status;
+    this.keys.forEach(item => {
+      if (item) {
+        status = true;
+      }
+    });
+
+    return status;
+  }
+
+  update() {
+    const gamePads = navigator.getGamepads();
+
+    if (gamePads[0]) {
+      const gamePad = gamePads[0];
+      const id = gamePad.id;
+      const axes = gamePad.axes.map(axe => axe.toFixed(2));
+      const buttons = gamePad.buttons.map((button, index) => ({
+        name: `button_${index}`,
+        pressed: button.pressed,
+        touched: button.touched,
+        value: button.value
+      }));
+
+      // button_0 - button x
+      // button_7 - right stick
+      // button_15 - right
+      // button_14 - left
+      // button_14 - left
+
+      buttons.forEach(button => {
+        const {
+          name,
+          pressed
+        } = button;
+
+        this.keys.set(name, pressed);
+      });
+
+      // document.getElementById('gamePadInfoId').innerText = id;
+      // document.getElementById('gamePadInfoAxes').innerText = axes;
+      // document.getElementById('gamePadInfoButtons').innerText = JSON.stringify(buttons);
     }
+  }
 }

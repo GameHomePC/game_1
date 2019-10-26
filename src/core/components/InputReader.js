@@ -8,13 +8,13 @@ export default class InputReader {
         const { hasDown } = this.input;
         let x = 0;
 
-        if (hasDown('A') || hasDown('left')) {
+        if (hasDown('A') || hasDown('left') || hasDown('button_14')) {
             this.downInput = true;
 
             return 'left';
         }
 
-        if (hasDown('D') || hasDown('right')) {
+        if (hasDown('D') || hasDown('right') || hasDown('button_15')) {
             this.downInput = true;
 
             return 'right';
@@ -26,7 +26,7 @@ export default class InputReader {
     readSpeed() {
         const { hasDown } = this.input;
 
-        return hasDown('shift');
+        return hasDown('shift') || hasDown('button_7');
     }
 
     readJump() {
@@ -50,6 +50,6 @@ export default class InputReader {
     goInTheDoor() {
         const { hasDown } = this.input;
 
-        return hasDown('e');
+        return hasDown('e') || hasDown('button_0');
     }
 }

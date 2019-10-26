@@ -42,3 +42,13 @@ body {
     transition: width 0.2s ease;
     will-change: width;
 }
+
+.gamePadInfo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: 1px solid #fff;
+    width: 400px;
+    color: #fff;
+    z-index: 100;
+}

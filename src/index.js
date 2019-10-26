@@ -51,6 +51,8 @@ class Game {
             if (this.activeScene) {
                 this.activeScene.update(dt);
             }
+
+            this.input.update();
         });
     }
 }
