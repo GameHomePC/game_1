@@ -22,7 +22,7 @@ export default class Play {
             game: this.game,
             position: {
                 x: 220,
-                y: 800
+                y: 500
             },
             width: 26 * 2,
             height: 37 * 2
@@ -32,7 +32,7 @@ export default class Play {
             game: this.game,
             position: {
                 x: 500,
-                y: 820
+                y: 520
             },
             width: 280 / 2,
             height: 464 / 2
@@ -77,7 +77,7 @@ export default class Play {
             game: this.game,
             position: {
                 x: 0,
-                y: window.innerHeight - 50
+                y: 640
             },
             width: window.innerWidth,
             height: 50
