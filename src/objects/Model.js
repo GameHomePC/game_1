@@ -1,21 +1,23 @@
 import * as PIXI from "pixi.js";
 
 export default class Model extends PIXI.DisplayObject {
-    constructor(object) {
+    constructor(scene, options) {
         super();
 
         const {
-            game,
             position,
             width,
             height,
             enablePhysics = true
-        } = object;
+        } = options;
+        const {
+            game
+        } = scene;
 
         this.game = game;
         this.app = game.app;
-        this.scene = game.activeScene;
-        this.stage = game.activeScene.viewport;
+        this.scene = scene;
+        this.stage = scene.viewport;
         this.objects = game.objects;
         this.subject = game.subject;
         this.assets = game.assets;

@@ -2,8 +2,8 @@ import * as PIXI from 'pixi.js';
 import Model from './Model';
 
 export default class Road extends Model {
-    constructor(object) {
-        super(object);
+    constructor(scene, options) {
+        super(scene, options);
 
         this.start();
         this.update();

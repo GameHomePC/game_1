@@ -18,8 +18,7 @@ export default class Play {
     start() {
         this.createWorld();
 
-        this.player = new Player({
-            game: this.game,
+        this.player = new Player(this, {
             position: {
                 x: 220,
                 y: 500
@@ -28,8 +27,7 @@ export default class Play {
             height: 37 * 2
         });
 
-        this.door1 = new Door({
-            game: this.game,
+        this.door1 = new Door(this, {
             position: {
                 x: 500,
                 y: 520
@@ -39,8 +37,7 @@ export default class Play {
         });
         this.door1.name = 'door 1';
 
-        this.door2 = new Door({
-            game: this.game,
+        this.door2 = new Door(this, {
             position: {
                 x: 500,
                 y: 185
@@ -73,8 +70,7 @@ export default class Play {
         // init bg
         // this.createBG();
 
-        new Road({
-            game: this.game,
+        new Road(this, {
             position: {
                 x: 0,
                 y: 640
@@ -83,8 +79,7 @@ export default class Play {
             height: 50
         });
 
-        new Road({
-            game: this.game,
+        new Road(this, {
             position: {
                 x: 300,
                 y: 300
@@ -95,6 +90,6 @@ export default class Play {
     };
 
     update(dt) {
-
+        this.viewport.follow(this.player.visual);
     }
 }

@@ -11,8 +11,8 @@ import CommandProcessor from '../core/components/CommandProcessor';
 import InputReader from '../core/components/InputReader';
 
 export default class Player extends Model {
-    constructor(object) {
-        super(object);
+    constructor(scene, options) {
+        super(scene, options);
 
         this.inputReader = new InputReader(this);
         this.commandProcessor = new CommandProcessor();
@@ -36,8 +36,6 @@ export default class Player extends Model {
             if (action === 'collisionEndDoor') {
                 target.handleLockedOrUnlockedDoor(this);
             }
-
-            console.log(action);
         });
     }
 
