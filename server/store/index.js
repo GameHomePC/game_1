@@ -8,6 +8,22 @@ module.exports = io => {
             this.objects = new Map();
 
             this.init();
+
+            setInterval(() => {
+                console.log(this.players);
+            }, 2000);
+        }
+
+        get players() {
+            const players = [];
+
+            this.objects.forEach((object) => {
+                if (object.constructor.name !== 'Player') return;
+
+                players.push(object);
+            });
+
+            return players;
         }
 
         init() {
@@ -21,6 +37,16 @@ module.exports = io => {
 
         delete(key) {
             this.objects.delete(key);
+        }
+
+        values() {
+            const data = [];
+
+            this.objects.forEach(object => {
+                data.push(JSON.parse(object.values()));
+            });
+
+            return JSON.stringify(data);
         }
     }
 

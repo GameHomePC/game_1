@@ -10,7 +10,7 @@ app.get('/', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'index.html'));
 });
 
-require('./store')(io);
+const store = require('./store')(io);
 
 http.listen(process.env.SERVER_PORT, () => {
     console.log(`listening on *:${process.env.SERVER_PORT}`);

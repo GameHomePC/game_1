@@ -15,9 +15,25 @@ class Game {
         this.allScene = Scene;
         this.assets = {};
         this.subject = new Subject();
-        this.socket = new Socket();
+        this.socket = new Socket(this);
 
         this.start();
+
+        setInterval(() => {
+            console.log(this.players);
+        }, 2000);
+    }
+
+    get players() {
+        const players = [];
+
+        this.objects.forEach((object) => {
+            if (object.constructor.name !== 'Player') return;
+
+            players.push(object);
+        });
+
+        return players;
     }
 
     start() {
@@ -49,6 +65,8 @@ class Game {
             this.objects.forEach((e) => {
                 e.update(dt);
             });
+
+            // console.log(this.players);
 
             if (this.activeScene) {
                 this.activeScene.update(dt);

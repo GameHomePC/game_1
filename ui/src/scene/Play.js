@@ -21,15 +21,6 @@ export default class Play {
 
         this.createWorld();
 
-        this.player = new Player(this, {
-            position: {
-                x: 220,
-                y: 500
-            },
-            width: 26 * 2,
-            height: 37 * 2
-        });
-
         this.door1 = new Door(this, {
             position: {
                 x: 500,
@@ -93,6 +84,8 @@ export default class Play {
     };
 
     update(dt) {
-        this.viewport.follow(this.player.visual);
+        if (this.player) {
+            this.viewport.follow(this.player.visual);
+        }
     }
 }

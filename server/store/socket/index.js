@@ -2,8 +2,6 @@ const log4js = require('log4js');
 const logger = log4js.getLogger();
 const Player = require('./../../models/Player')();
 
-console.log(Player);
-
 module.exports = store => {
     class Socket {
         constructor(store) {
@@ -18,11 +16,16 @@ module.exports = store => {
 
                 this.store.add(name, player);
 
+                socket.emit('newUser', player.values());
+                socket.broadcast.emit('newUser', player.values());
+
                 socket.on('disconnect', () => {
                     this.store.delete(name);
                 });
 
-                socket.broadcast.emit('all', this.store.objects);
+                // setInterval(() => {
+                //     socket.broadcast.emit('all', this.store.values());
+                // }, 1000);
             });
         }
     }
