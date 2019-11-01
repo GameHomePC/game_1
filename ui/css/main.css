@@ -1,0 +1,54 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    overflow: hidden;
+    background-color: #000;
+}
+
+#debug {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    opacity: 0.4;
+}
+
+.loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 500px;
+    height: 50px;
+    margin: auto;
+    border: 2px solid #FEEB77;
+    box-sizing: border-box;
+    background-color: #DE3249;
+}
+
+.loading__progress {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background-color: #FEEB77;
+    width: 0;
+    transition: width 0.2s ease;
+    will-change: width;
+}
+
+.gamePadInfo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: 1px solid #fff;
+    width: 400px;
+    color: #fff;
+    z-index: 100;
+}
