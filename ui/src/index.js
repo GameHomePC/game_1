@@ -3,7 +3,8 @@ import { Subject } from 'rxjs';
 
 import Input from './core/Input';
 import Physics from './core/Physics';
-import Scene from './scene/index'
+import Scene from './scene/index';
+import Socket from './core/Socket.js';
 
 class Game {
     constructor() {
@@ -14,6 +15,7 @@ class Game {
         this.allScene = Scene;
         this.assets = {};
         this.subject = new Subject();
+        this.socket = new Socket();
 
         this.start();
     }

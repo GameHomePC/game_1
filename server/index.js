@@ -10,10 +10,7 @@ app.get('/', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'index.html'));
 });
 
-io.on('connection', function(socket){
-    console.log(socket);
-    console.log('a user connected');
-});
+require('./store')(io);
 
 http.listen(process.env.SERVER_PORT, () => {
     console.log(`listening on *:${process.env.SERVER_PORT}`);

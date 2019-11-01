@@ -16,6 +16,9 @@ export default class Play {
     }
 
     start() {
+        // init socket
+        this.game.socket.start();
+
         this.createWorld();
 
         this.player = new Player(this, {
