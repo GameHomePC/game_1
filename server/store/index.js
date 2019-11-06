@@ -8,10 +8,6 @@ module.exports = io => {
             this.objects = new Map();
 
             this.init();
-
-            setInterval(() => {
-                console.log(this.players);
-            }, 2000);
         }
 
         get players() {

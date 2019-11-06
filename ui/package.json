@@ -4,7 +4,7 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "server": "static . -p 9090",
+    "server": "static . -p 9090 -a 192.168.10.62",
     "webpack": "webpack --mode development -w"
   },
   "dependencies": {
